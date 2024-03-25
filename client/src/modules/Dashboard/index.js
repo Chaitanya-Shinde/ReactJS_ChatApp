@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import Avatar from '../../assets/user-circle-light.png'
 import VideoCall from '../../assets/video-camera-light.png'
 import PhoneCall from '../../assets/phone-call-light.png'
@@ -130,17 +130,22 @@ const Dashboard = () => {
     ]
 
     const [showMessages,setShowMessages] = useState(false); //bool to control drawer
-    const[message, setMessage]= useState('') //message we're about to send
+    const [message, setMessage]= useState('') //message we're about to send
     const [user, setUser] = useState(JSON.parse(localStorage.getItem("user:detail"))) //info about user
     const [conversations, setConversations] = useState([]) //list of all conversations
     const [messages, setMessages] = useState({}) //list of all messages in conversation
     const [users, setUsers]=useState([]) //list of users
     const [socket, setSocket] = useState(null)
+    const messageRef = useRef(null);
     
     document.body.style.overflow = "hidden"
     useEffect(()=>{
         setSocket(io('http://localhost:8002'));
     },[])
+
+    useEffect(()=>{
+        messageRef?.current?.scrollIntoView({ behavior: 'smooth' });
+    }, [messages?.messages])
 
     useEffect(()=>{
         socket?.emit('addUser', user?.id)
@@ -328,9 +333,12 @@ const Dashboard = () => {
                                         
                                         messages?.messages?.length>0 ? messages.messages.map(({message, user:{ id}={}})=>{
                                             return(
-                                                <div className={` max-w-[40%] flex rounded-b-xl  p-3 mb-4 ${ id === user?.id ? 'bg-secondary rounded-tl-xl ml-auto' : ' bg-primary rounded-tr-xl'}`}>
+                                                <>
+                                                    <div className={` max-w-[40%] flex rounded-b-xl  p-3 mb-4 ${ id === user?.id ? 'bg-secondary rounded-tl-xl ml-auto' : ' bg-primary rounded-tr-xl'}`}>
                                                     {message}
-                                                </div>
+                                                    </div>
+                                                    <div ref={messageRef}></div>
+                                                </>
                                             )
 
                                         }): <div className='w-full h-full flex justify-center items-center'><h2 className='text-xl font-[450]'>No messages found</h2></div>
