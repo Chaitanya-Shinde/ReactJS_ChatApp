@@ -7,6 +7,7 @@ import Button from '../../components/Button'
 function Form({
   isSignInPage=false,
 }) {
+  const apiLink = 'https://react-js-chat-app-server-ecr7.vercel.app'
   const[data,setData] =useState({
     ...(!isSignInPage &&{
       userName: '',
@@ -22,7 +23,7 @@ function Form({
   const handleSubmit = async (e)=>{
     e.preventDefault()
     console.log(data)
-    const res = await fetch(`http://localhost:8000/api/${isSignInPage?'login':'register'}`,{
+    const res = await fetch(`${apiLink}api/${isSignInPage?'login':'register'}`,{
       method: 'POST',
       headers:{
         'Content-Type': 'application/json'

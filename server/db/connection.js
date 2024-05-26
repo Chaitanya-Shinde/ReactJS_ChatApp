@@ -1,5 +1,9 @@
 const mongoose = require('mongoose');
-const url = 'mongodb+srv://admin_chat_app:'+process.env.MONGO_ATLAS_PASSWORD+'@cluster0.nqys5ag.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
+const dotenv = require('dotenv').config()
+
+const mongoPass = process.env.MONGO_ATLAS_PASSWORD
+console.log("pass is", mongoPass);
+const url = 'mongodb+srv://chatApp_admin:'+ mongoPass +'@cluster0.nqys5ag.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
 
 mongoose.connect(url,{
     useNewUrlParser: true,

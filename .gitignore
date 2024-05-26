@@ -41,4 +41,4 @@ jspm_packages
 #public/
 
 #files
-/server/nodemon.json
+/server/.env
