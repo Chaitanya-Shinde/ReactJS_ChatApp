@@ -141,7 +141,7 @@ const Dashboard = () => {
     
     document.body.style.overflow = "hidden"
     useEffect(()=>{
-        setSocket(io('http://localhost:8002'));
+        setSocket(io('https://react-js-chat-app-server-ecr7.vercel.app/'));
     },[])
 
     useEffect(()=>{
