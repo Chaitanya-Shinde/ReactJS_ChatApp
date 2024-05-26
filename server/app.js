@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const cors = require('cors');
 const io = require('socket.io')(8002,{
     cors:{
-        origin: "http://localhost:3100"
+        origin: "https://react-js-chat-app-server-ecr7.vercel.app/"
     }
 });
 
