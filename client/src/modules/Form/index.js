@@ -7,7 +7,7 @@ import Button from '../../components/Button'
 function Form({
   isSignInPage=false,
 }) {
-  const apiLink = 'https://react-js-chat-app-server-ecr7.vercel.app'
+  const apiLink = 'https://react-js-chat-app-server-ecr7-bv0eiem7m.vercel.app/'
   const[data,setData] =useState({
     ...(!isSignInPage &&{
       userName: '',

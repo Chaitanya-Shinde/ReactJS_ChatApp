@@ -14,7 +14,7 @@ import {io} from 'socket.io-client'
 
 
 const Dashboard = () => {
-    const apiLink = "https://react-js-chat-app-server-ecr7.vercel.app/"
+    const apiLink = "https://react-js-chat-app-server-ecr7-bv0eiem7m.vercel.app/"
     const friends=[
         {
             name: "alex",
