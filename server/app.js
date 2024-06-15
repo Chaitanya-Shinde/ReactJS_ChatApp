@@ -10,8 +10,8 @@ const socketIo = require('socket.io');
 // Use server instance for Socket.IO
 const io = socketIo(server, {
     cors: {
-        origin: 'https://react-js-chat-app-alpha.vercel.app',
-        default: 'https://react-js-chat-app-alpha.vercel.app',
+        origin: 'https://react-js-chat-app-hy22.vercel.app/',
+        default: 'https://react-js-chat-app-hy22.vercel.app/',
         methods: ["GET", "POST"],
         allowedHeaders: ["Content-Type"],
     }
