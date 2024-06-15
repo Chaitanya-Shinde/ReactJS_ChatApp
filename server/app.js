@@ -10,16 +10,16 @@ const socketIo = require('socket.io');
 // Use server instance for Socket.IO
 const io = socketIo(server, {
     cors: {
-        origin: 'https://react-js-chat-app-alpha.vercel.app/',
-        default: 'https://react-js-chat-app-alpha.vercel.app/',
+        origin: 'https://react-js-chat-app-alpha.vercel.app',
+        default: 'https://react-js-chat-app-alpha.vercel.app',
         methods: ["GET", "POST"],
         allowedHeaders: ["Content-Type"],
     }
 });
 app.use(
     cors({
-        origin: 'https://react-js-chat-app-alpha.vercel.app/', // Replace with your frontend URL
-        default: 'https://react-js-chat-app-alpha.vercel.app/', 
+        origin: 'https://react-js-chat-app-alpha.vercel.app', // Replace with your frontend URL
+        default: 'https://react-js-chat-app-alpha.vercel.app', 
         methods: ["GET", "POST"],
         allowedHeaders: ["Content-Type"]
     })
@@ -85,6 +85,7 @@ app.get('/', (req, res) => {
 app.post('/api/register', async (req, res) => {
     try {
         const { userName, email, password, confirmPassword } = req.body;
+        console.log("registered");
         if (!userName || !email || !password) {
             return res.status(400).send("Please enter all details");
         }
@@ -98,6 +99,7 @@ app.post('/api/register', async (req, res) => {
             await newUser.save();
             res.status(200).json({ message: 'User registered successfully' });
         });
+        
     } catch (error) {
         console.error(error);
         res.status(500).send('Server error');
@@ -108,6 +110,7 @@ app.post('/api/register', async (req, res) => {
 app.post('/api/login', async (req, res) => {
     try {
         const { email, password } = req.body;
+        console.log("logged in");
         if (!email || !password) {
             return res.status(400).send("Please fill all the details");
         }
