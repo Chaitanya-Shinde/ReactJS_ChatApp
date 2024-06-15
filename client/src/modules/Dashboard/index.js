@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect } from 'react'
 import Avatar from '../../assets/user-circle-light.png'
 import VideoCall from '../../assets/video-camera-light.png'
 import PhoneCall from '../../assets/phone-call-light.png'
@@ -14,139 +14,24 @@ import {io} from 'socket.io-client'
 
 
 const Dashboard = () => {
-    const apiLink = "https://react-js-chat-app-server-ecr7.vercel.app/"
-    const friends=[
-        {
-            name: "alex",
-            email: "alex@gmail.com"
-        },
-        {
-            name: "alex",
-            email: "alex@gmail.com"
-        },
-        {
-            name: "alex",
-            email: "alex@gmail.com"
-        },
-        {
-            name: "alex",
-            email: "alex@gmail.com"
-        },
-        {
-            name: "alex",
-            email: "alex@gmail.com"
-        },
-        {
-            name: "alex",
-            email: "alex@gmail.com"
-        },
-        {
-            name: "alex",
-            email: "alex@gmail.com"
-        },
-        {
-            name: "alex",
-            email: "alex@gmail.com"
-        },
-        {
-            name: "alex",
-            email: "alex@gmail.com"
-        },
-        {
-            name: "alex",
-            email: "alex@gmail.com"
-        },
-        {
-            name: "alex",
-            email: "alex@gmail.com"
-        },
-        {
-            name: "alex",
-            email: "alex@gmail.com"
-        },
-        {
-            name: "alex",
-            email: "alex@gmail.com"
-        },
-        {
-            name: "alex",
-            email: "alex@gmail.com"
-        },
-        {
-            name: "alex",
-            email: "alex@gmail.com"
-        },
-        {
-            name: "alex",
-            email: "alex@gmail.com"
-        },
-        {
-            name: "alex",
-            email: "alex@gmail.com"
-        },
-        {
-            name: "alex",
-            email: "alex@gmail.com"
-        },
-        {
-            name: "alex",
-            email: "alex@gmail.com"
-        },
-        {
-            name: "alex",
-            email: "alex@gmail.com"
-        },
-        {
-            name: "alex",
-            email: "alex@gmail.com"
-        },
-        {
-            name: "alex",
-            email: "alex@gmail.com"
-        },
-        {
-            name: "alex",
-            email: "alex@gmail.com"
-        },
-        {
-            name: "tony",
-            email: "alex@gmail.com"
-        },
-        {
-            name: "alex",
-            email: "alex@gmail.com"
-        },
-        {
-            name: "alex",
-            email: "alex@gmail.com"
-        },
-        {
-            name: "alex",
-            email: "alex@gmail.com"
-        },
-        {
-            name: "alex",
-            email: "alex@gmail.com"
-        }    
-    ]
 
     const [showMessages,setShowMessages] = useState(false); //bool to control drawer
-    const [message, setMessage]= useState('') //message we're about to send
+    const[message, setMessage]= useState('') //message we're about to send
     const [user, setUser] = useState(JSON.parse(localStorage.getItem("user:detail"))) //info about user
     const [conversations, setConversations] = useState([]) //list of all conversations
     const [messages, setMessages] = useState({}) //list of all messages in conversation
     const [users, setUsers]=useState([]) //list of users
     const [socket, setSocket] = useState(null)
-    const messageRef = useRef(null);
-    
+
     document.body.style.overflow = "hidden"
     useEffect(()=>{
-        setSocket(io('https://react-js-chat-app-server-ecr7.vercel.app/'));
+        const newSocket = io('http://localhost:8000', {
+            transports: ['websocket'],
+            withCredentials: true,
+        });
+        setSocket(newSocket);
+        return () => newSocket.close();
     },[])
-
-    useEffect(()=>{
-        messageRef?.current?.scrollIntoView({ behavior: 'smooth' });
-    }, [messages?.messages])
 
     useEffect(()=>{
         socket?.emit('addUser', user?.id)
@@ -162,13 +47,13 @@ const Dashboard = () => {
         })
     },[socket])
 
-    
+
 
     //fetch conversations
     useEffect(()=>{
         const loggedInUser = JSON.parse(localStorage.getItem("user:detail"))
         const fetchConversations= async()=>{
-            const res = await fetch(`${apiLink}api/conversation/${loggedInUser?.id}`,{
+            const res = await fetch(`http://localhost:8000/api/conversation/${loggedInUser?.id}`,{
                 method: 'GET',
                 headers:{
                     'Content-Type': 'application/json',
@@ -177,14 +62,14 @@ const Dashboard = () => {
             const resData = await res.json()
             setConversations(resData)
         }
-        
+
         fetchConversations();
     }, [])
 
     //fetch users
     useEffect(()=>{
         const fetchUsers = async()=>{
-            const res = await fetch(`${apiLink}api/users/${user?.id}`,{
+            const res = await fetch(`http://localhost:8000/api/users/${user?.id}`,{
                 method: 'GET',
                 headers:{
                     'Content-Type': 'application/json',
@@ -198,7 +83,7 @@ const Dashboard = () => {
 
     const fetchMessages =  async(conversationId, receiver)=>{
         console.log("receiver id is ", receiver?.receiverId)
-        const res = await fetch(`${apiLink}api/message/${conversationId}?senderId=${user?.id}&&receiverId=${receiver?.receiverId}`,{
+        const res = await fetch(`http://localhost:8000/api/message/${conversationId}?senderId=${user?.id}&&receiverId=${receiver?.receiverId}`,{
             method: 'GET',
             // ...(conversationId === 'new' &&{
             //     body: JSON.stringify({
@@ -224,7 +109,7 @@ const Dashboard = () => {
             message,
             conversationId: messages?.conversationId
         });
-        const res = await fetch(`${apiLink}api/message`, {
+        const res = await fetch('http://localhost:8000/api/message', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -253,8 +138,8 @@ const Dashboard = () => {
                     <h1 className=' text-3xl font-semibold text-dark '>Messages</h1>
                     <img src={NewMessage} alt='' className=' mr-2 w-6 cursor-pointer' onClick={()=>{ setShowMessages(!showMessages); }}/>
                 </div>
-                
-                
+
+
                 <div id="scrollDiv" className=' flex-col w-full  mt-2'>
                     <InfiniteScroll
                         dataLength={conversations.length}
@@ -282,11 +167,11 @@ const Dashboard = () => {
                                     </div>
                                 )
                             }) : <div className='w-full flex justify-center'><h2 className='text-xl font-[450]'>No conversations.</h2></div>
-                            
+
                         }   
                     </InfiniteScroll>
                 </div>
-                   
+
             </div> 
             { showMessages && <div className='h-full w-[20%] min-w-[18%] max-w-[20%] bg-white flex flex-col p-2  '>
                     <h1 className=' text-2xl font-semibold text-dark '>Start a new conversation.</h1>
@@ -318,7 +203,7 @@ const Dashboard = () => {
              {/* {console.log(messages?.receiver?.userName)} } */}
                 {
                     messages?.receiver?.userName ?
-                        
+
                         <div className='w-full h-full flex flex-col  '> 
                             <div className='w-full  bg-secondary flex justify-start items-center p-2 drop-shadow-sm shadow-secondary '>
                                 <img src={Avatar} alt='' className='flex-none w-10'/>
@@ -331,21 +216,18 @@ const Dashboard = () => {
                             </div>
                             <div className=' w-full h-full bg-white px-10 py-6 flex-col flex-grow-0 border-b-2 border overflow-auto '>
                                     {
-                                        
+
                                         messages?.messages?.length>0 ? messages.messages.map(({message, user:{ id}={}})=>{
                                             return(
-                                                <>
-                                                    <div className={` max-w-[40%] flex rounded-b-xl  p-3 mb-4 ${ id === user?.id ? 'bg-secondary rounded-tl-xl ml-auto' : ' bg-primary rounded-tr-xl'}`}>
+                                                <div className={` max-w-[40%] flex rounded-b-xl  p-3 mb-4 ${ id === user?.id ? 'bg-secondary rounded-tl-xl ml-auto' : ' bg-primary rounded-tr-xl'}`}>
                                                     {message}
-                                                    </div>
-                                                    <div ref={messageRef}></div>
-                                                </>
+                                                </div>
                                             )
 
                                         }): <div className='w-full h-full flex justify-center items-center'><h2 className='text-xl font-[450]'>No messages found</h2></div>
                                     }
-                                    
-                                
+
+
                             </div>
                             <div className='w-full   bg-secondary p-2  flex items-center justify-start '>
                                 <Input className='w-full mr-4' hasLabel={false} label='hello' type='text'name='input' value={message} onChange={(e)=>setMessage( e.target.value)} isRequired={false} placeholder='Type your message here...' inputClassName=' w-full shadow-md border-none '/>
@@ -356,11 +238,11 @@ const Dashboard = () => {
                         :
                         <div className='w-full h-full flex justify-center items-center'><h2 className='text-xl font-[450]'>Click a contact to get chatting!</h2></div>
                 }
-                
-                
+
+
             </div>
         </div>
-        
+
     </div>
   ) 
 }
