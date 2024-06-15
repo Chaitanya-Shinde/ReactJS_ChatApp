@@ -25,12 +25,13 @@ const Dashboard = () => {
     const apiLink = 'https://react-js-chat-app-hy22.vercel.app'
     document.body.style.overflow = "hidden"
     useEffect(()=>{
-        const newSocket = io(apiLink, {
-            transports: ['websocket'],
-            withCredentials: true,
-        });
-        setSocket(newSocket);
-        return () => newSocket.close();
+        // const newSocket = io(apiLink, {
+        //     transports: ['websocket'],
+        //     withCredentials: true,
+        // });
+        // setSocket(newSocket);
+        // return () => newSocket.close();
+        setSocket(io(apiLink));
     },[])
 
     useEffect(()=>{
