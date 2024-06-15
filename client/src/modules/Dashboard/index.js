@@ -22,10 +22,10 @@ const Dashboard = () => {
     const [messages, setMessages] = useState({}) //list of all messages in conversation
     const [users, setUsers]=useState([]) //list of users
     const [socket, setSocket] = useState(null)
-
+    const apiLink = 'https://react-js-chat-app-hy22.vercel.app'
     document.body.style.overflow = "hidden"
     useEffect(()=>{
-        const newSocket = io('http://localhost:8000', {
+        const newSocket = io(apiLink, {
             transports: ['websocket'],
             withCredentials: true,
         });
@@ -53,7 +53,7 @@ const Dashboard = () => {
     useEffect(()=>{
         const loggedInUser = JSON.parse(localStorage.getItem("user:detail"))
         const fetchConversations= async()=>{
-            const res = await fetch(`http://localhost:8000/api/conversation/${loggedInUser?.id}`,{
+            const res = await fetch(`${apiLink}/api/conversation/${loggedInUser?.id}`,{
                 method: 'GET',
                 headers:{
                     'Content-Type': 'application/json',
@@ -69,7 +69,7 @@ const Dashboard = () => {
     //fetch users
     useEffect(()=>{
         const fetchUsers = async()=>{
-            const res = await fetch(`http://localhost:8000/api/users/${user?.id}`,{
+            const res = await fetch(`${apiLink}/api/users/${user?.id}`,{
                 method: 'GET',
                 headers:{
                     'Content-Type': 'application/json',
@@ -83,7 +83,7 @@ const Dashboard = () => {
 
     const fetchMessages =  async(conversationId, receiver)=>{
         console.log("receiver id is ", receiver?.receiverId)
-        const res = await fetch(`http://localhost:8000/api/message/${conversationId}?senderId=${user?.id}&&receiverId=${receiver?.receiverId}`,{
+        const res = await fetch(`${apiLink}/api/message/${conversationId}?senderId=${user?.id}&&receiverId=${receiver?.receiverId}`,{
             method: 'GET',
             // ...(conversationId === 'new' &&{
             //     body: JSON.stringify({
@@ -109,7 +109,7 @@ const Dashboard = () => {
             message,
             conversationId: messages?.conversationId
         });
-        const res = await fetch('http://localhost:8000/api/message', {
+        const res = await fetch(`${apiLink}/api/message`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
